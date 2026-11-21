@@ -142,18 +142,60 @@ def test_javascript_injection_in_author(malicious_input):
 
 # Extreme input tests
 
-def test_very_long_book_name():
-    long_name = "A" * 10000
+@pytest.mark.parametrize("length", [
+    10000,
+    100000,
+    1000000,
+    2000000,
+    4000000
+])
+def test_very_long_book_name(length):
+    long_name = "A" * length
 
     with pytest.raises(ValueError):
         Book(long_name, "Author", 2020, "Fantasy")
 
 
-def test_very_long_author_name():
-    long_author = "A" * 10000
+@pytest.mark.parametrize("length", [
+    10000,
+    100000,
+    1000000,
+    2000000,
+    4000000
+])
+def test_very_long_author_name(length):
+    long_author = "A" * length
 
     with pytest.raises(ValueError):
         Book("Book", long_author, 2020, "Fantasy")
+
+
+@pytest.mark.parametrize("length", [
+    10000,
+    100000,
+    1000000,
+    2000000,
+    4000000
+])
+def test_extremely_long_book_type(length):
+    long_type = "A" * length
+
+    with pytest.raises(ValueError):
+        Book("Book", "Author", 2020, long_type)
+
+
+@pytest.mark.parametrize("length", [
+    10000,
+    100000,
+    1000000,
+    2000000,
+    4000000
+])
+def test_extremely_long_status(length):
+    long_status = "A" * length
+
+    with pytest.raises(ValueError):
+        Book("Book", "Author", 2020, "Fantasy", long_status)
 
 
 def test_unicode_characters():
@@ -171,17 +213,3 @@ def test_large_year_value():
 def test_negative_year_value():
     with pytest.raises(ValueError):
         Book("Old Book", "Author", -2147483648, "History")
-
-
-def test_extremely_long_book_type():
-    long_type = "A" * 10000
-
-    with pytest.raises(ValueError):
-        Book("Book", "Author", 2020, long_type)
-
-
-def test_extremely_long_status():
-    long_status = "A" * 10000
-
-    with pytest.raises(ValueError):
-        Book("Book", "Author", 2020, "Fantasy", long_status)
